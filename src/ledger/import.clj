@@ -14,10 +14,10 @@
                          (.substring amount 1 (dec (count amount)))
                          amount))})))
 
-(defn write-ledger [out entries]
+(defn write-ledger [out account entries]
   (let [formatter (SimpleDateFormat. "yyyy-MM-dd")]
    (with-open [out (io/writer out)]
-     (doseq [{:keys [date description category amount]} entries]
+     (doseq [{:keys [date description category amount]} (sort-by :date entries)]
        (.write out (str (.format formatter date) " " description "\n"))
-       (.write out (str "\tUSAA Checking\t" amount "\n"))
-       (.write out (str "\t" category "\n"))))))
+       (.write out (str "\t" category "\t" (* -1 amount) "\n"))
+       (.write out (str "\t" account "\n"))))))
